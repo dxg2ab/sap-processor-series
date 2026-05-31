@@ -1,7 +1,9 @@
 module clock (
-    input i_hlt,
-    input i_clk,
-    output o_clk
+    input wire i_hlt, //HLT signal
+    input wire i_clk, //clock signal
+    output wire o_clk //clock signal
 );
-    assign o_clk = hlt ? 1'b0 : i_clk; 
+
+    assign o_clk = hlt ? 1'b0 : i_clk; //if HLT is not set return current clock
+    
 endmodule
