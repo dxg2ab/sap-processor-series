@@ -1,7 +1,7 @@
 module controller (
     input wire i_clk,
     input wire i_rst,
-    input wire [3:0] i_opcode
+    input wire [3:0] i_opcode,
     output wire [11:0] o_control
 );
     //define control signals
@@ -32,14 +32,26 @@ module controller (
     localparam STAGE_4 = 4;
     localparam STAGE_5 = 5;
 
-    reg [3:0] state_reg; //register to store current state
+    reg [3:0] stage_reg; //register to store current stage
     reg [11:0] control_reg; //control register
+
+    always @(posedge i_rst or negedge i_clk) begin
+        if (i_rst) begin
+            stage_reg <= STAGE_0; //if reset signal is given go to STAGE_0
+        end
+        else if (stage_reg == STAGE_5) begin
+            stage_reg <= STAGE_0; //if at STAGE_5 go back to STAGE_0
+        end
+        else begin
+            stage_reg <= stage_reg + 1; //increment the stage
+        end
+    end
 
     //stage logic
     always @(*) begin
         control_reg = 12'b0; //init control register with default values
 
-        case (state_reg)
+        case (stage_reg)
             /****************************************
             common stage operations
             ****************************************/
@@ -105,12 +117,12 @@ module controller (
 
             STAGE_5: begin
                 case(i_opcode)
-                OP_ADD begin:
+                OP_ADD: begin
                     control_reg[SIG_ADDER_EN] = 1; //put the data on adder to bus
                     control_reg[SIG_A_LOAD] = 1; //load the data to A
                 end
 
-                OP_SUB begin:
+                OP_SUB: begin
                     control_reg[SIG_ADDER_SUB] = 1; //enable subtraction
                     control_reg[SIG_ADDER_EN] = 1; //put the data on adder to bus
                     control_reg[SIG_A_LOAD] = 1; //load the data to A
