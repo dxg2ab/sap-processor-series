@@ -35,7 +35,7 @@ module controller (
     reg [3:0] stage_reg; //register to store current stage
     reg [11:0] control_reg; //control register
 
-    always @(posedge i_rst or negedge i_clk) begin
+    always @(posedge i_rst or posedge i_clk) begin
         if (i_rst) begin
             stage_reg <= STAGE_0; //if reset signal is given go to STAGE_0
         end
