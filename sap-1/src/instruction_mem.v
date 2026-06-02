@@ -1,9 +1,9 @@
 module instruction_mem (
     input wire i_clk, //clock input
     input wire i_rst, //reset input
-    input wire i_load //load input
+    input wire i_load, //load input
     input wire [7:0] i_bus,
-    output reg [7:0] o_data 
+    output wire [7:0] o_data 
 );
     reg [7:0] instruction_reg;
 
@@ -13,7 +13,7 @@ module instruction_mem (
             instruction_reg <= 8'b0;
         end
         else if (i_load) begin
-            instruction_reg <= i_bus
+            instruction_reg <= i_bus;
         end
 
     end
