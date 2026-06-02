@@ -5,18 +5,18 @@ module controller (
     output wire [11:0] o_control
 );
     //define control signals
-    localparam SIG_ADDER_EN = 0;
-    localparam SIG_ADDER_SUB = 1;
-    localparam SIG_B_LOAD = 2;
-    localparam SIG_A_EN = 3;
-    localparam SIG_A_LOAD = 4;
-    localparam SIG_IR_EN = 5;
-    localparam SIG_IR_LOAD = 6;
-    localparam SIG_MAR_EN = 7;
-    localparam SIG_MAR_LOAD = 8;
-    localparam SIG_PC_EN = 9;
-    localparam SIG_PC_INC = 10;
-    localparam SIG_HLT = 11;
+    localparam SIG_ADDER_EN = 0; //load adder value to bus
+    localparam SIG_ADDER_SUB = 1; //switch to substraction mode
+    localparam SIG_B_LOAD = 2; //load the data on bus to B
+    localparam SIG_A_EN = 3; //load the value in A to bus
+    localparam SIG_A_LOAD = 4; //load the data on bus to A
+    localparam SIG_IR_EN = 5; //load the data on IR to bus
+    localparam SIG_IR_LOAD = 6; //load the data on bus to IR
+    localparam SIG_MAR_EN = 7; //put the value on an adress to bus
+    localparam SIG_MAR_LOAD = 8; //load an adress to MAR
+    localparam SIG_PC_EN = 9; //put the data on pc to bus
+    localparam SIG_PC_INC = 10; //increment the pc
+    localparam SIG_HLT = 11; //halt execution
 
     //define opcodes
     localparam OP_LDA = 4'b0000;
