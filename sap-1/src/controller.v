@@ -12,8 +12,8 @@ module controller (
     localparam SIG_A_LOAD = 4;
     localparam SIG_IR_EN = 5;
     localparam SIG_IR_LOAD = 6;
-    localparam SIG_MEM_EN = 7;
-    localparam SIG_MEM_LOAD = 8;
+    localparam SIG_MAR_EN = 7;
+    localparam SIG_MAR_LOAD = 8;
     localparam SIG_PC_EN = 9;
     localparam SIG_PC_INC = 10;
     localparam SIG_HLT = 11;
@@ -58,7 +58,7 @@ module controller (
             
             STAGE_0: begin
                 control_reg[SIG_PC_EN] = 1; //enable bus mode
-                control_reg[SIG_MEM_LOAD] = 1; //load the value to memory
+                control_reg[SIG_MAR_LOAD] = 1; //load the value to memory
             end
 
             STAGE_1: begin
@@ -66,7 +66,7 @@ module controller (
             end
 
             STAGE_2: begin
-                control_reg[SIG_MEM_EN] = 1; //load the data on memory to bus
+                control_reg[SIG_MAR_EN] = 1; //load the data on memory to bus
                 control_reg[SIG_IR_LOAD] = 1; //load the IR
             end
 
@@ -77,17 +77,17 @@ module controller (
                 case(i_opcode)
                     OP_LDA: begin
                         control_reg[SIG_IR_EN] = 1; //put operand to bus
-                        control_reg[SIG_MEM_LOAD] = 1; //load the operand to memory
+                        control_reg[SIG_MAR_LOAD] = 1; //load the operand to memory
                     end
 
                     OP_ADD: begin
                         control_reg[SIG_IR_EN] = 1; //put operand to bus
-                        control_reg[SIG_MEM_LOAD] = 1; //load the operand to memory
+                        control_reg[SIG_MAR_LOAD] = 1; //load the operand to memory
                     end
 
                     OP_SUB: begin
                         control_reg[SIG_IR_EN] = 1; //put operand to bus
-                        control_reg[SIG_MEM_LOAD] = 1; //load the operand to memory
+                        control_reg[SIG_MAR_LOAD] = 1; //load the operand to memory
                     end
 
                     OP_HLT: begin
@@ -99,17 +99,17 @@ module controller (
             STAGE_4: begin
                 case(i_opcode)
                     OP_LDA: begin
-                        control_reg[SIG_MEM_EN] = 1; //put data in memory to bus
+                        control_reg[SIG_MAR_EN] = 1; //put data in memory to bus
                         control_reg[SIG_A_LOAD] = 1; //load the data on bus to A
                     end
 
                     OP_ADD: begin
-                        control_reg[SIG_MEM_EN] = 1; //put data in memory to bus
+                        control_reg[SIG_MAR_EN] = 1; //put data in memory to bus
                         control_reg[SIG_B_LOAD] = 1; //load the data on bus to B
                     end
 
                     OP_SUB: begin
-                        control_reg[SIG_MEM_EN] = 1; //put data in memory to bus
+                        control_reg[SIG_MAR_EN] = 1; //put data in memory to bus
                         control_reg[SIG_B_LOAD] = 1; //load the data on bus to B
                     end
                 endcase
