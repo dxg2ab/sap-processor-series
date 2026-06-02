@@ -1,6 +1,6 @@
 module clock (
-    input wire i_hlt, //HLT signal
     input wire i_clk, //clock signal
+    input wire i_hlt, //HLT signal
     output wire o_clk //clock signal
 );
 
