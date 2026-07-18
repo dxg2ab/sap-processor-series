@@ -42,7 +42,6 @@ task automatic check_result(input logic sub,
     
 endtask
 
-
 initial begin
 
     $display("=== Addition Tests ===");
@@ -66,12 +65,5 @@ initial begin
     $finish;
 
 end
-
-
-
-
-
-
-
 
 endmodule
