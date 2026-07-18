@@ -38,9 +38,7 @@ task automatic check_result(input logic sub,
                      a, b, expected, out_result);
             num_fails++;
         end
-
     end
-
     
 endtask
 
@@ -66,8 +64,6 @@ initial begin
     $display("Tests Failed: %0d", num_fails);
 
     $finish;
-
-
 
 end
 
