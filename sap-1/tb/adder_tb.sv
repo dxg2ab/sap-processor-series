@@ -57,7 +57,7 @@ initial begin
     check_result(1, 8'd0,   8'd0); // TEST-CASE-6: 0 - 0
     check_result(1, 8'd255, 8'd0); // TEST-CASE-7: 255 - 0
     check_result(1, 8'd0,   8'd1); // TEST-CASE-8: 0 - 1 (UNDERFLOW)
-    check_result(1, 8'd0,   8'd255); // TEST-CASE-8: 0 - 255 (UNDERFLOW)
+    check_result(1, 8'd0,   8'd255); // TEST-CASE-9: 0 - 255 (UNDERFLOW)
     check_result(1, $urandom_range(255,0), $urandom_range(255,0)); // TEST-CASE-10: RANDOM
 
     $display("Tests Failed: %0d", num_fails);
