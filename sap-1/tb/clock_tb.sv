@@ -4,61 +4,49 @@ logic in_clk;
 logic in_hlt;
 logic out_clk;
 
+int num_fails = 0; // var to count failing cases 
+
 //DUT generation
 clock clock_dut(.i_clk(in_clk),
                 .i_hlt(in_hlt),
                 .o_clk(out_clk));
 
+
+task automatic check_result(input logic clk_in,
+                            input logic hlt_in);
+
+    logic expected; 
+
+    begin
+        in_clk = clk_in;
+        in_hlt = hlt_in;
+        #10;
+
+        expected = hlt_in ? 1'b0 : clk_in;
+
+        if (expected === out_clk) begin
+            $display("[PASS] HLT = %0d, CLK_IN = %0d, OUT = %0d",
+                    hlt_in, clk_in, out_clk);
+        end
+        else begin
+            $display("[FAIL] HLT = %0d, CLK_IN = %0d, OUT = %0d, EXPECTED = %0d",
+                    hlt_in, clk_in, out_clk, expected);
+                    num_fails+=1;
+        end
+    end
+
+
+endtask
+
 initial begin
-    $dumpfile("clock.vcd");
-    $dumpvars(0, clock_tb);
 
-    //TEST-CASE-1: HLT = 0, CLK = 0
-    in_hlt = 1'b0;
-    in_clk = 1'b0;
-    #10;
+    check_result(0,0); // TEST-CASE-1: CLK = 0 HLT = 0
+    check_result(0,1); // TEST-CASE-4: CLK = 0 HLT = 1
+    check_result(1,0); // TEST-CASE-2: CLK = 1 HLT = 0
+    check_result(1,1); // TEST-CASE-3: CLK = 1 HLT = 1
 
-    if(out_clk == in_clk) begin
-        $display("[PASSED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-    else begin
-        $display("[FAILED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
 
-    //TEST-CASE-2 HLT = 0, CLK = 1
-    in_clk = 1'b1;
-    #10;
-
-    if(out_clk == in_clk) begin
-        $display("[PASSED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-    else begin
-        $display("[FAILED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-
-    //TEST-CASE-3: HLT = 1, CLK = 1
-    in_hlt = 1'b1;
-    #10;
-
-    if(out_clk == 1'b0) begin
-        $display("[PASSED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-    else begin
-        $display("[FAILED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-
-    //TEST-CASE-4: HLT = 1, CLK = 0
-    in_clk = 1'b0;
-    #10;
-
-    if(out_clk == 1'b0) begin
-        $display("[PASSED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-    else begin
-        $display("[FAILED]: in_clk = %b, in_hlt = %b, out_clk = %b",in_clk,in_hlt,out_clk);
-    end
-
-    #10;
+    $display("Test Failed = %0d", num_fails);
     $finish;
 
 end
