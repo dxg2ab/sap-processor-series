@@ -23,10 +23,12 @@ end
 task automatic check_result(input logic i_rst,
                             input logic i_inc);
 
-    //update signals on positive edge
+    @(negedge clk); // assign on negative edge
+
     rst = i_rst;
     inc = i_inc;
-    @(posedge clk);
+
+    @(posedge clk); // update on positive edge
     #1;
 
     if (i_rst) begin
