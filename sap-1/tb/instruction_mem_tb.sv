@@ -20,6 +20,7 @@ instruction_mem instruction_mem_dut(.i_clk(clk),
 task automatic check_result(input logic i_rst,
                             input logic i_load,
                             input logic [7:0] i_bus);
+        @(negedge clk);
 
         rst = i_rst;
         load = i_load;
@@ -32,8 +33,6 @@ task automatic check_result(input logic i_rst,
         else if (i_load) begin
             expected = i_bus;
         end
-
-        
 
         // update on positive edge
         @(posedge clk);
