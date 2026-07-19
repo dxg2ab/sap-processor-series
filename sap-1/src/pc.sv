@@ -4,7 +4,7 @@ module pc (
     input logic i_inc, //increase flag
     output logic [7:0] o_adr //current adress
 );
-    logic [3:0] pc //4 bit register to store instructions
+    logic [3:0] pc; //4 bit register to store instructions
 
     always_ff @(posedge i_clk) begin
 
