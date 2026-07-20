@@ -2,7 +2,7 @@ module register_b(
     input logic i_clk, // clock signal
     input logic i_rst, // reset signal
     input logic i_load, // load signal
-    input logic [7:0] i_bus // data from bus
+    input logic [7:0] i_bus, // data from bus
     output logic [7:0] o_data // data out
 );
     logic [7:0] register_b;
