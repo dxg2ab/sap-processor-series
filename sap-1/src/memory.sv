@@ -9,7 +9,7 @@ module memory (
     logic [7:0] ram [0:15]; // 16 x 8 cell memory
 
     initial begin
-        $readmemh("program.bin", ram); // read the program
+        $readmemh("./program.bin", ram); // read the program
     end
 
     always_ff @(posedge i_clk) begin
