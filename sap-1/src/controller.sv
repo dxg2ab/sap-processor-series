@@ -1,42 +1,11 @@
+`include "../inc/sap_1_defs.svh"
+
 module controller (
     input logic i_clk,
     input logic i_rst,
-    input logic [3:0] i_opcode,
+    input opcodes_t i_opcode,
     output logic [11:0] o_control
 );
-    //define control signal
-    typedef enum logic [3:0] { 
-        ADDER_EN = 4'd0, // load adder result to bus
-        ADDER_SUB = 4'd1, // switch to sub mode
-        B_LOAD = 4'd2, // load reg b 
-        A_EN = 4'd3, // load bus with reg a 
-        A_LOAD = 4'd4, // load reg a 
-        IR_EN = 4'd5, // load bus with instruction reg
-        IR_LOAD = 4'd6, // load instruction reg
-        MAR_EN = 4'd7, // load bus with ram
-        MAR_LOAD = 4'd8, // point a specific adress on ram
-        PC_EN = 4'd9, // load bus with pc
-        PC_INC = 4'd10, // increment pc
-        HLT_EN = 4'd11 // halt execution
-    } control_t;
-
-    //define opcodes
-    typedef enum logic [3:0] {  
-        LDA = 4'd0,
-        ADD = 4'd1,
-        SUB = 4'd2,
-        HLT = 4'd4
-    } opcodes_t;
-    
-    //define execution stages
-    typedef enum logic [2:0] { 
-        STAGE_0 = 3'h0,
-        STAGE_1 = 3'h1,
-        STAGE_2 = 3'h2,
-        STAGE_3 = 3'h3,
-        STAGE_4 = 3'h4,
-        STAGE_5 = 3'h5
-    } stages_t;
 
     stages_t stage_reg; // register to store current stage
     control_t control_reg; // control register
