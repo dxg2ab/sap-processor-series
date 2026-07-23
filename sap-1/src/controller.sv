@@ -8,7 +8,7 @@ module controller (
 );
 
     stages_t stage_reg; // register to store current stage
-    control_t control_reg; // control register
+    logic [11:0] control_reg; // control register
 
     // stage change logic
     always_ff @(posedge i_rst or posedge i_clk) begin
