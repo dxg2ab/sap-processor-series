@@ -4,13 +4,44 @@ module top(
     input logic ext_clk, // external clock to cpu
     input logic ext_rst // external reset signal
 );
+    /***********************
+    ****INTERNAL SIGNALS****
+    ***********************/ 
+
+    // signals
+    logic clk_cpu; // clk pulse that will be provided to cpu
+    logic hlt_sig; // hlt signal from controller reg
+    logic add_en_sig; // signal to load adder result to bus
+    logic sub_sig; // mode select signal from controller
+    logic pc_en_sig; // signal to load pc to bus
+    logic pc_inc_sig; // pc inc signal from controller
+    logic mem_en_sig; // signal to load memory to bus
+    logic load_mem_sig; // load signal from controller
+    logic ir_en_sig; // load bus with instruction sig
+    logic ir_load_sig; // load inst mem sig from controller
+    logic a_en_sig; // signal to load a to bus
+    logic reg_a_load_sig; // load reg a signal from controller
+    logic reg_b_load_sig; // load reg signal from controller
+
+    // registers
+    logic [7:0] adder_out; // register to store adder result
+    logic [7:0] pc_adr; // pc output
+    logic [7:0] memory_out; // memory output
+    logic [7:0] ir_out; // instruction reg output
+    logic [7:0] reg_a_out; // reg a output
+    logic [7:0] reg_b_out; // reg b output
+    logic [3:0] opcode;
+    logic [3:0] operand;
+    logic [11:0] control_signals; // regiter to store control signals
+    logic [7:0] bus; // 8 bit bus
+
+    // extract opcode and operand
+    assign opcode = ir_out[7:4];
+    assign operand = ir_out[3:0];
 
     /******************
     ****CLOCK INIT*****
     ******************/
-
-    logic hlt_sig; // hlt signal from controller reg
-    logic clk_cpu; // clk pulse that will be provided to cpu
 
     clock u_clock(
         .i_hlt(hlt_sig),
@@ -21,10 +52,6 @@ module top(
     /******************
     ****ADDER INIT*****
     ******************/
-
-    logic add_en_sig; // signal to load adder result to bus
-    logic sub_sig; // mode select signal from controller
-    logic [7:0] adder_out; // register to store adder result
 
     adder u_adder(
         .i_sub(sub_sig),
@@ -37,10 +64,6 @@ module top(
     ******PC INIT******
     ******************/
 
-    logic pc_en_sig; // signal to load pc to bus
-    logic pc_inc_sig; // pc inc signal from controller 
-    logic [7:0] pc_adr;
-
     pc u_pc(
         .i_clk(clk_cpu),
         .i_rst(ext_rst),
@@ -51,10 +74,6 @@ module top(
     /******************
     ****MEMORY INIT****
     ******************/
-
-    logic mem_en_sig; // signal to load memory to bus
-    logic load_mem_sig; // load signal from controller
-    logic [7:0] memory_out;
 
     memory u_memory(
         .i_clk(clk_cpu),
@@ -68,10 +87,6 @@ module top(
     ****INSTRUCTION MEMORY INIT****
     ******************************/
 
-    logic ir_en_sig; // load bus with instruction sig
-    logic ir_load_sig; // load inst mem sig from controller
-    logic [7:0] ir_out;
-
     instruction_mem u_instruction_mem(
         .i_clk(clk_cpu),
         .i_rst(ext_rst),
@@ -83,10 +98,6 @@ module top(
     /**********************
     ****REGISTER A INIT****
     **********************/
-
-    logic a_en_sig; // signal to load a to bus
-    logic reg_a_load_sig; // load reg a signal from controller
-    logic [7:0] reg_a_out; // reg a output
 
     register_a u_register_a(
         .i_clk(clk_cpu),
@@ -100,9 +111,6 @@ module top(
     ****REGISTER B INIT****
     **********************/
 
-    logic reg_b_load_sig; // load reg signal from controller
-    logic [7:0] reg_b_out; // reg b output
-
     register_b u_register_b(
         .i_clk(clk_cpu),
         .i_rst(ext_rst),
@@ -115,47 +123,36 @@ module top(
     ****CONTROLLER INIT****
     **********************/
 
-    // extract opcode and operand
-    logic [3:0] opcode;
-    logic [3:0] operand;
-    assign opcode = ir_out[7:4];
-    assign operand = ir_out[3:0];
-
-    logic [11:0] control_reg_out; // control reg output
-
     controller u_controller(
         .i_clk(clk_cpu),
         .i_rst(ext_rst),
         .i_opcode(opcode),
-        .o_control(control_reg_out)
+        .o_control(control_signals)
     );
 
     /******************
     *****BUS LOGIC*****
     ******************/
 
-    logic [7:0] bus; // 8 bit bus
-
     // controller signal mapping
-    assign add_en_sig        = control_reg_out[ADDER_EN];
-    assign sub_sig           = control_reg_out[ADDER_SUB];
-    assign reg_b_load_sig    = control_reg_out[B_LOAD];
-    assign a_en_sig          = control_reg_out[A_EN];
-    assign reg_a_load_sig    = control_reg_out[A_LOAD];
-    assign ir_en_sig         = control_reg_out[IR_EN];
-    assign ir_load_sig       = control_reg_out[IR_LOAD];
-    assign mem_en_sig        = control_reg_out[MAR_EN];
-    assign load_mem_sig      = control_reg_out[MAR_LOAD];
-    assign pc_en_sig         = control_reg_out[PC_EN];
-    assign pc_inc_sig        = control_reg_out[PC_INC];
-    assign hlt_sig           = control_reg_out[HLT_EN];
+    assign add_en_sig        = control_signals[ADDER_EN];
+    assign sub_sig           = control_signals[ADDER_SUB];
+    assign reg_b_load_sig    = control_signals[B_LOAD];
+    assign a_en_sig          = control_signals[A_EN];
+    assign reg_a_load_sig    = control_signals[A_LOAD];
+    assign ir_en_sig         = control_signals[IR_EN];
+    assign ir_load_sig       = control_signals[IR_LOAD];
+    assign mem_en_sig        = control_signals[MAR_EN];
+    assign load_mem_sig      = control_signals[MAR_LOAD];
+    assign pc_en_sig         = control_signals[PC_EN];
+    assign pc_inc_sig        = control_signals[PC_INC];
+    assign hlt_sig           = control_signals[HLT_EN];
     
     // bus MUX
     always_comb begin
-
         bus = 8'h00;
 
-        unique if (pc_en_sig) begin
+        if (pc_en_sig) begin
             bus = pc_adr;
         end
         else if (mem_en_sig) begin
@@ -170,7 +167,5 @@ module top(
         else if (add_en_sig) begin
             bus = adder_out;
         end
-
     end
-
 endmodule
