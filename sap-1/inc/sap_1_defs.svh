@@ -1,7 +1,7 @@
 `ifndef SAP_1_DEFS_SVH
 `define SAP_1_DEFS_SVH
 
-// define control signal
+// define control register pin names
 typedef enum logic [3:0] { 
     ADDER_EN = 4'd0, // load adder result to bus
     ADDER_SUB = 4'd1, // switch to sub mode
