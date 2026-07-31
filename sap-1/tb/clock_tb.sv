@@ -6,21 +6,21 @@ logic out_clk;
 
 int num_fails = 0; // var to count failing cases 
 
-//DUT generation
+//DUT init
 clock clock_dut(.i_clk(in_clk),
                 .i_hlt(in_hlt),
                 .o_clk(out_clk));
 
 
-task automatic check_result(input logic clk_in,
-                            input logic hlt_in);
+task automatic check_clock(input logic clk_in,
+                           input logic hlt_in);
 
-    logic expected; 
+    logic expected; // var to store expected outcome to compare
 
     begin
         in_clk = clk_in;
         in_hlt = hlt_in;
-        #10;
+        #50;
 
         expected = hlt_in ? 1'b0 : clk_in;
 
@@ -35,18 +35,23 @@ task automatic check_result(input logic clk_in,
         end
     end
 
-
 endtask
+
+// generate wave form
+initial begin
+    $dumpfile("clock_tb.vcd");
+    $dumpvars(0,clock_tb);
+
+end
 
 initial begin
 
-    check_result(0,0); // TEST-CASE-1: CLK = 0 HLT = 0
-    check_result(0,1); // TEST-CASE-4: CLK = 0 HLT = 1
-    check_result(1,0); // TEST-CASE-2: CLK = 1 HLT = 0
-    check_result(1,1); // TEST-CASE-3: CLK = 1 HLT = 1
+    check_clock(0,0); // TC-CLK-1: CLK = 0 HLT = 0
+    check_clock(0,1); // TC-CLK-2: CLK = 0 HLT = 1
+    check_clock(1,0); // TC-CLK-3: CLK = 1 HLT = 0
+    check_clock(1,1); // TC-CLK-4: CLK = 1 HLT = 1
 
-
-    $display("Test Failed = %0d", num_fails);
+    $display("Tests Failed = %0d", num_fails);
     $finish;
 
 end
