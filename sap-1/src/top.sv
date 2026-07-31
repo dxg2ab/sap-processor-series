@@ -35,10 +35,6 @@ module top(
     logic [11:0] control_signals; // regiter to store control signals
     logic [7:0] bus; // 8 bit bus
 
-    // extract opcode and operand
-    assign opcode = ir_out[7:4];
-    assign operand = ir_out[3:0];
-
     /******************
     ****CLOCK INIT*****
     ******************/
@@ -147,6 +143,10 @@ module top(
     assign pc_en_sig         = control_signals[PC_EN];
     assign pc_inc_sig        = control_signals[PC_INC];
     assign hlt_sig           = control_signals[HLT_EN];
+
+    // extract opcode and operand
+    assign opcode = ir_out[7:4];
+    assign operand = ir_out[3:0];
     
     // bus MUX
     always_comb begin
